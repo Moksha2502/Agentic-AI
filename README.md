@@ -1,194 +1,152 @@
-# NutriDerma AI - Complete Healthcare Chatbot Website
 
-A comprehensive AI-powered healthcare platform providing personalized assistance for diet, skincare, and wellbeing.
+---
+
+# NutriDerma AI - Healthcare Chatbot Website
+
+An AI-powered healthcare platform providing personalized assistance for **diet, skincare, and wellbeing**.
 
 ## Features
 
-- **Multi-AI Chat System**: Separate AI assistants for Diet, Skincare, and Wellbeing
-- **Real-time Chat Interface**: Interactive chat with message history and persistence
-- **MongoDB Integration**: Full database support with fallback to localStorage
-- **Google Colab Integration**: Connect your AI models via ngrok
-- **Responsive Design**: Mobile-first design with modern UI/UX
-- **User Authentication**: Sign in/Register pages (ready for backend integration)
-- **Pricing Plans**: Flexible subscription options with free trial
+* **Multi-AI Chat System**: Separate AI assistants for Diet, Skincare, and Wellbeing
+* **Real-time Chat Interface**: Interactive chat with message history and persistence
+* **MongoDB Integration**: Full database support with localStorage fallback
+* **Responsive Design**: Mobile-first, modern UI/UX
+* **User Authentication**: Sign in/Register pages with JWT-based auth
+* **Chat Management**: Create, delete, and switch chats
+* **Loading & Error Handling**: Clear user feedback for messages and API calls
 
 ## Tech Stack
 
-- **Frontend**: React 18, TypeScript, Tailwind CSS
-- **Database**: MongoDB with Mongoose (with localStorage fallback)
-- **Icons**: Lucide React
-- **HTTP Client**: Axios
-- **Routing**: React Router DOM
-- **Build Tool**: Vite
+* **Frontend**: React 18, TypeScript, Tailwind CSS
+* **Backend**: Node.js, Express.js
+* **Database**: MongoDB with Mongoose
+* **Icons**: Lucide React
+* **Routing**: React Router DOM
+* **HTTP Client**: Fetch API
+* **Build Tool**: Vite
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 16+ 
-- MongoDB (optional - uses localStorage fallback)
-- Google Colab notebook with ngrok (for AI integration)
+* Node.js 16+
+* MongoDB running locally or remotely
 
 ### Installation
 
-1. Clone the repository
-2. Install dependencies:
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-username/NutriDerma-AI.git
+   cd NutriDerma-AI
+   ```
+2. Install dependencies for both frontend and backend:
+
    ```bash
    npm install
+   cd client
+   npm install
+   cd ..
    ```
-
 3. Create environment file:
+
    ```bash
    cp .env.example .env
    ```
+4. Update `.env`:
 
-4. Update environment variables in `.env`:
    ```env
    MONGODB_URI=mongodb://localhost:27017/nutriderma-ai
-   REACT_APP_NGROK_URL=https://your-ngrok-url.ngrok.io
+   JWT_SECRET=your_jwt_secret
+   PORT=5000
    ```
-
 5. Start the development server:
+
    ```bash
    npm run dev
    ```
 
-## Google Colab Integration
-
-### Setting up your Colab notebook:
-
-1. Install required packages in Colab:
-   ```python
-   !pip install flask flask-cors pyngrok
-   ```
-
-2. Create your AI endpoint:
-   ```python
-   from flask import Flask, request, jsonify
-   from flask_cors import CORS
-   from pyngrok import ngrok
-   
-   app = Flask(__name__)
-   CORS(app)
-   
-   @app.route('/api/chat', methods=['POST'])
-   def chat():
-       data = request.json
-       message = data.get('message')
-       chat_type = data.get('chatType')
-       
-       # Your AI logic here
-       response = process_ai_request(message, chat_type)
-       
-       return jsonify({'response': response})
-   
-   # Start ngrok tunnel
-   public_url = ngrok.connect(5000)
-   print(f"Public URL: {public_url}")
-   
-   # Run the app
-   app.run(port=5000)
-   ```
-
-3. Copy the ngrok URL and update your `.env` file
+   * This runs **frontend** on Vite and **backend** on Express.
 
 ## Database Schema
 
 ### Chat Collection
+
 ```javascript
 {
   _id: ObjectId,
   userId: String,
   chatType: 'diet' | 'skincare' | 'wellbeing',
   title: String,
-  messages: [{
-    id: String,
-    text: String,
-    sender: 'user' | 'ai',
-    timestamp: Date
-  }],
+  messages: [
+    {
+      id: String,
+      text: String,
+      sender: 'user' | 'ai',
+      timestamp: Date
+    }
+  ],
   createdAt: Date,
   updatedAt: Date
 }
 ```
 
-## API Endpoints (Expected from Colab)
+### User Collection
 
-### POST /api/chat
-```json
+```javascript
 {
-  "message": "User's message",
-  "chatType": "diet|skincare|wellbeing",
-  "timestamp": "2024-01-01T00:00:00.000Z"
+  _id: ObjectId,
+  name: String,
+  email: String,
+  phone: String,
+  password: String, // hashed
+  subscription: String,
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
-**Response:**
-```json
-{
-  "response": "AI generated response"
-}
-```
+## API Endpoints
 
-## Features Overview
+### Auth
 
-### Chat System
-- ✅ Real-time messaging interface
-- ✅ Chat history with persistence
-- ✅ New chat creation
-- ✅ Chat deletion
-- ✅ Auto-generated chat titles
-- ✅ Message timestamps
-- ✅ Loading states and error handling
+* **POST /api/auth/register** – Register a user
+* **POST /api/auth/login** – Login a user
+* **GET /api/auth/me** – Get current logged-in user
 
-### Database
-- ✅ MongoDB integration with Mongoose
-- ✅ localStorage fallback for development
-- ✅ Automatic data persistence
-- ✅ Chat CRUD operations
+### Chat
 
-### UI/UX
-- ✅ Responsive design (mobile-first)
-- ✅ Modern gradient color scheme
-- ✅ Smooth animations and transitions
-- ✅ Professional healthcare aesthetic
-- ✅ Accessible navigation
-- ✅ Loading states and feedback
+* **POST /api/chats** – Create new chat
+* **GET /api/chats?chatType=diet|skincare|wellbeing** – Get chat history
+* **POST /api/chats/:chatType** – Send message to AI
+* **DELETE /api/chats/:chatId** – Delete a chat
 
-### Pages
-- ✅ Home page with service overview
-- ✅ About Us with detailed information
-- ✅ Pricing with subscription plans
-- ✅ Sign In/Register forms
-- ✅ Individual AI chat pages
+## Chat System Features
+
+* ✅ Real-time messaging
+* ✅ Chat history with persistence
+* ✅ New chat creation & deletion
+* ✅ Auto-generated chat titles
+* ✅ Message timestamps
+* ✅ Loading and error states
+
+## UI/UX
+
+* ✅ Mobile-first responsive design
+* ✅ Smooth animations and transitions
+* ✅ Modern, professional healthcare aesthetic
+* ✅ Accessible navigation
 
 ## Customization
 
-### Adding New AI Types
-1. Update the `chatType` union type in `src/models/Chat.ts`
-2. Add new route in `src/App.tsx`
-3. Create new page component
-4. Update navigation in `src/components/Header.tsx`
-
-### Styling
-- Colors: Modify Tailwind classes or extend the config
-- Fonts: Update in `src/index.css`
-- Components: All styled with Tailwind CSS classes
-
-### AI Integration
-- Update `NGROK_URL` in `src/services/chatService.ts`
-- Modify the `callAI` method for different API formats
-- Add authentication headers if needed
+* **Add new AI types:** Update `chatType` in backend models and frontend types
+* **Styling:** Modify Tailwind classes in `src/index.css` or extend Tailwind config
+* **AI Integration:** Backend handles AI responses; modify `/routes/chats.js` for logic
 
 ## Deployment
 
-The app is ready for deployment on platforms like:
-- Vercel
-- Netlify  
-- AWS Amplify
-- Heroku
-
-Make sure to set environment variables in your deployment platform.
+* Platforms: Vercel, Netlify, AWS Amplify, Heroku
+* Ensure environment variables are set in your deployment platform
 
 ## Contributing
 
@@ -198,6 +156,5 @@ Make sure to set environment variables in your deployment platform.
 4. Test thoroughly
 5. Submit a pull request
 
-## License
+---
 
-This project is licensed under the MIT License.
